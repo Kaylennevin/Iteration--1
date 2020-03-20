@@ -118,10 +118,8 @@ class CircleBlade extends DamageTrap {
         this.setVelocityX(velocityX);
         this.setVelocityY(velocityY);
         this.setBounce(2);
-        this.setMaxVelocity(300);
-        
-
-
+        this.setMaxVelocity(500);
+    
 
     }
 

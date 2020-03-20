@@ -146,7 +146,7 @@ class GameScene extends Phaser.Scene {
         this.trap6 = new Blade(this, 685, 80, "blade", 90, 1, 700);
         this.trap7 = new Blade(this, 715, 80, "blade", 90, 1, 700);
 
-        this.circleblade = new CircleBlade(this, 1000, 150, "circlesaw", 2, 0, 300);
+        this.circleblade = new CircleBlade(this, 995, 120, "circlesaw", 2, 0, 500);
 
     
 
@@ -155,23 +155,23 @@ class GameScene extends Phaser.Scene {
     changeDirection() {
         if(this.circleblade.body.blocked.down) {
             this.circleblade.setVelocityY(0);
-            this.circleblade.setVelocityX(300);
+            this.circleblade.setVelocityX(500);
         }
 
         else if (this.circleblade.body.blocked.right) {
             this.circleblade.setVelocityX(0);
-            this.circleblade.setVelocityY(-300);
+            this.circleblade.setVelocityY(-500);
         }
 
         else if(this.circleblade.body.blocked.up ) {
             this.circleblade.setVelocityY(0);
-            this.circleblade.setVelocityX(-300);
+            this.circleblade.setVelocityX(-500);
         }
 
         else if(this.circleblade.body.blocked.left)
         {
             this.circleblade.setVelocityX(0);
-            this.circleblade.setVelocityY(300);
+            this.circleblade.setVelocityY(500);
         }
 
       
