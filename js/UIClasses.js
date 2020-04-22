@@ -36,7 +36,7 @@ class Button extends Phaser.GameObjects.Sprite {
         }
 
         //This event fires when the mouse gets released whilst over the sprite.
-        this.setInteractive().on("pointerup", function() {
+        this.setInteractive().on("pointerdown", function() {
             if(this.enabled) {
                 //Swap over all of the toggle settings if the Button is toggleable.
                 if(this.toggleable) {

@@ -5,6 +5,9 @@ class GameScene extends Phaser.Scene {
     playerHealth = 100;
     UIScene;
     activePointers;
+    pointerOnButton = false;
+    score = 0;
+    allScarabs = [];
 
 
     constructor(config) {
@@ -15,6 +18,8 @@ class GameScene extends Phaser.Scene {
 
         this.load.image("player", "assets/player.png");
         this.load.image("sandTiles", "assets/sandstone-tiles.png");
+        this.load.image("end-glow", "assets/endglow.png");
+        this.load.image("scarab", "assets/scarab.png");
 
         this.load.tilemapTiledJSON("tilemap", "assets/sand-map-1.json");
 
@@ -60,6 +65,18 @@ class GameScene extends Phaser.Scene {
         this.createTrap();
         this.createPlayer();
         this.enableCollision();
+        //this.createScarab();
+
+        this.allScarabs.push(this.physics.add.sprite(600, 420, 'scarab'));
+        this.allScarabs.push(this.physics.add.sprite(1250, 400, 'scarab'));
+
+        for (let i = 0; i < this.allScarabs.length; i++) {
+            let item = this.allScarabs[i];
+            this.physics.add.overlap(this.player, item, this.collectScarab, null, this);
+            
+        }
+
+        
 
 
         this.displayHealth = this.add.text(20, 660, "HEALTH: 100%", {
@@ -74,6 +91,8 @@ class GameScene extends Phaser.Scene {
         this.displayHealth.setScrollFactor(0);
         this.displayHealth.setDepth(10);
 
+       
+       
 
 
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
@@ -103,6 +122,29 @@ class GameScene extends Phaser.Scene {
     update() {
 
 
+
+        var pointerList = this.scene.scene.input.manager.pointers;
+
+        
+        this.activePointers = 0;
+
+        for (var i = 0; i < pointerList.length; i++)
+        {   
+          
+            var pointer = pointerList[i]; 
+            if(pointer.isDown) {
+                this.activePointers++;
+            }
+
+            
+        }
+        console.log(this.activePointers);
+
+        if (this.activePointers == 0) { 
+            this.player.body.setVelocity(0, 0);
+        }
+
+        
         // move the player up when up arrow key is pressed
         if (this.keyPress.up.isDown) {
             this.player.body.setVelocity(0, -400);
@@ -124,32 +166,6 @@ class GameScene extends Phaser.Scene {
         } else {
             //this.player.body.setVelocity(0, 0);
         }
-
-        var pointerList = this.scene.scene.input.manager.pointers;
-
-        
-        this.activePointers = 0;
-
-        for (var i = 0; i < pointerList.length; i++)
-        {   
-          
-            var pointer = pointerList[i]; 
-            if(pointer.isDown) {
-                this.activePointers++;
-            }
-
-            //console.log(pointer);
-            
-        }
-        console.log(this.activePointers);
-
-        if (this.activePointers == 0) { 
-            this.player.body.setVelocity(0, 0);
-
-        }
-
-
-        
 
     }
 
@@ -205,6 +221,21 @@ class GameScene extends Phaser.Scene {
 
 
     }
+
+    collectScarab(obj1, obj2) {
+        obj2.disableBody(true, true);
+        this.score++;
+        console.log(this.score);
+
+        if (this.score==2) { 
+            this.endGlow = this.physics.add.sprite(1584, 350, "end-glow")
+            this.endGlow.setAlpha(0.5);
+    }
+       
+       
+    }
+
+
 
     gameOver() {
         if (this.playerHealth <= 0) {
@@ -264,18 +295,44 @@ class UIScene extends Phaser.Scene {
         let gameScene = this.scene.manager.scenes[0];
         console.log("uiscene create");
 
-        let leftButton = new Button(this, 20, 20, "leftButton", function () {
-           console.log("left") ;
-        //    gameScene.player.body.setVelocity(-400, 0);
-        gameScene.player.body.setVelocity(0, 400);
+        let leftButton = new Button(this, 20, 20, "left-button", function () {
+
+              gameScene.player.body.setVelocity(-400, 0);
+  
 
         });
-        leftButton.setScale(11,21);
-        leftButton.setAlpha(0.1);
+        leftButton.setScale(11,22);
+        leftButton.setAlpha(0.00001);
+
+        let rightButton = new Button(this, 980, 20, "right-button", function() {
+
+            gameScene.player.body.setVelocity(400, 0);
+        });
+        rightButton.setScale(11,22);
+        rightButton.setAlpha(0.00001);
+
+
+        let upButton = new Button(this, 370, 20, "up-button", function() {
+
+            gameScene.player.body.setVelocity(0, -400);
+        }  );
+        upButton.setAlpha(0.00001);
+        upButton.setScale(19,11);
+
+        let downButton = new Button(this, 370, 380, "down-button", function() {
+
+            gameScene.player.body.setVelocity(0, 400);
+        }  );
+        downButton.setAlpha(0.00001);
+        downButton.setScale(19,11);
+
 
 
         console.log(this.scene);
         this.add.existing(leftButton);
+        this.add.existing(rightButton);
+        this.add.existing(upButton);
+        this.add.existing(downButton);
 
     }
 
